@@ -27,8 +27,8 @@ module tb ();
   wire VGND = 1'b0;
 `endif
 
-  // Replace tt_um_factory_test with your module name:
-  tt_um_factory_test user_project (
+  // Replace tt_um_example with your module name:
+  tt_um_warriorjacq9 dut (
 
       // Include power ports for the Gate Level test:
 `ifdef GL_TEST
@@ -45,5 +45,13 @@ module tb ();
       .clk    (clk),      // clock
       .rst_n  (rst_n)     // not reset
   );
+
+  initial begin // Stimulate device
+    ui_in = 8'b00100001; // ADDI 2
+  end
+
+  initial clk = 0;
+  always #10 clk = ~clk;
+  initial #1000 $finish;
 
 endmodule
