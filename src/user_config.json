@@ -1,0 +1,8 @@
+{
+  "DESIGN_NAME": "tt_um_warriorjacq9",
+  "VERILOG_FILES": [
+    "dir::project.v"
+  ],
+  "DIE_AREA": "0 0 161.00 111.52",
+  "FP_DEF_TEMPLATE": "dir::../tt/def/tt_block_1x1_pg.def"
+}
