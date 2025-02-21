@@ -44,10 +44,3 @@ test:
 	iverilog $(COMPILE_ARGS) -o $(SIM_BUILD)/sim.vvp -s $(TOPLEVEL) $(VERILOG_SOURCES)
 	vvp $(SIM_BUILD)/sim.vvp
 	gtkwave tb.vcd
-
-build:
-	source ~/ttsetup/venv/bin/activate
-	export PDK_ROOT=~/ttsetup/pdk
-	export PDK=sky130A
-	export OPENLANE2_TAG=2.2.9
-	python3.11 tt/tt_tool.py --harden --openlane2
