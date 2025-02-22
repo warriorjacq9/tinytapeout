@@ -47,7 +47,7 @@ pinout:
   uio[2]: "Bus 2"
   uio[3]: "Bus 3"
   uio[4]: "Output Enable"
-  uio[5]: "Bus Ready"
+  uio[5]: ""
   uio[6]: "Carry"
   uio[7]: "Done"
 

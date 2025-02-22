@@ -1,11 +1,13 @@
 `default_nettype none
 `timescale 1ns / 1ps
 
-/* This testbench just instantiates the module and makes some convenient wires
-   that can be driven / tested by the cocotb test.py.
-*/
-module tb ();
+`define assert(signal, value) \
+        if (signal !== value) begin \
+            $error("\n%c[1;91mTEST FAILED in %m: signal != value%c[0m",27,27); \
+            $finish; \
+        end
 
+module tb();
   // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
   initial begin
     $dumpfile("tb.vcd");
@@ -48,10 +50,27 @@ module tb ();
 
   initial begin // Stimulate device
     ui_in = 8'b00100001; // ADDI 2
+    #10; // Wait 5 clock cycles
+    `assert (uio_out[3:0], 6);
+    ui_in = 8'b00110001; // ADDI 3
+    #10;
+    `assert(uio_out[3:0], 7);
+    ui_in = 8'b00000000;
+    $display("%c[1;32mAll tests passed%c[0m", 27, 27);
+    $finish;
+  end
+  always @(uo_out[3:0]) begin // Listen for BUSREQ
+    case(uo_out[3:0])
+      4'b0011: begin // Next operand (Arbitrary for now, device can have up to 16 registers)
+        ui_in[7:4] = 1; // Simulate next operand being register 1
+      end
+      4'b0001: begin  // Send a register value (On a real device, the register block will take the number in current memory location
+        uio_in = 4;   // and give that register value to the ALU)
+      end
+    endcase
   end
 
-  initial clk = 0;
-  always #10 clk = ~clk;
-  initial #1000 $finish;
+  initial clk = 1;
+  always #1 clk = ~clk;
 
 endmodule

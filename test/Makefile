@@ -43,4 +43,4 @@ test:
 	mkdir -p $(SIM_BUILD) 
 	iverilog $(COMPILE_ARGS) -o $(SIM_BUILD)/sim.vvp -s $(TOPLEVEL) $(VERILOG_SOURCES)
 	vvp $(SIM_BUILD)/sim.vvp
-	gtkwave tb.vcd
+	gtkwave tb.vcd config.gtkw

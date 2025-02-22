@@ -43,16 +43,10 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
   wire oe_n;
   assign oe_n = uio_in[4];
 
-  wire ready_in;
-  assign ready_in = uio_in[5];
-
-  wire ready_out;
-  assign uio_out[5] = ready_out;
-
   wire carry;
   assign uio_out[6] = carry;
 
-  wire done;
+  reg done;
   assign uio_out[7] = done;
 
   // I/O assignments
@@ -61,7 +55,7 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
   reg [3:0] bus_iomask;
   assign uio_oe[3:0] = bus_iomask;
 
-  assign uio_oe[4] = 0; // Set Output Enable as input
+  assign uio_oe[5:4] = 0; // Set Output Enable, Ready as input
   assign uio_oe[7:6] = 1; // Set Done, Carry as output
 
   reg [3:0] temp;
@@ -70,14 +64,14 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
   reg [3:0] b;
   reg [4:0] c;
   assign carry = c[4];
-  reg [1:0] phase;
-  initial phase = 0;
-  initial {a, b, c} = 0;
+  reg [2:0] phase;
+  initial {phase, a, b, c, bus_iomask, done, bus_out, bus_req, mio_out} = 0;
   always @(posedge clk) begin
     case (opcode)
       1: begin // ADDI
         case (phase)
           0: begin
+            done <= 0;
             a <= mio_in;
             bus_req <= 4'b0011; // Request next operand (register number)
             phase <= 1;
@@ -89,11 +83,17 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
           end
           2: begin
             b <= bus_in;
+            bus_iomask <= 4'b0000;
             phase <= 3;
           end
           3: begin
-            c = a + b;
+            c <= a + b;
+            phase <= 4;
+          end
+          4: begin
             bus_out <= c[3:0];
+            done <= 1;
+            phase <= 0;
           end
         endcase
       end
