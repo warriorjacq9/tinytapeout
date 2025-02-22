@@ -58,8 +58,6 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
   assign uio_oe[5:4] = 0; // Set Output Enable, Ready as input
   assign uio_oe[7:6] = 1; // Set Done, Carry as output
 
-  reg [3:0] temp;
-
   reg [3:0] a;
   reg [3:0] b;
   reg [4:0] c;
@@ -102,5 +100,5 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
 
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, rst_n, 1'b0};
+  wire _unused = &{ena, rst_n, uio_in[7:5], uio_out[5:4], 1'b0};
 endmodule
