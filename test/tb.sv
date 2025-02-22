@@ -1,12 +1,13 @@
 `default_nettype none
 `timescale 1ns / 1ps
 
-`define assert(signal, value, fail_count, num) \
+`define assert(signal, value, fail_count, num, test_time) \
         if (signal !== value) begin \
-          $display("not ok %0d - FAILED in %m: signal != value", num); \
+          temp = signal; \
+          $display("not ok %0d - signal !== value # time=%0.3f ms", num, test_time); \
           fail_count++; \
         end else begin \
-          $display("ok %0d - signal == value", num); \
+          $display("ok %0d - signal == value # time=%0.3f ms", num, test_time); \
         end
 
 module tb();
@@ -17,6 +18,7 @@ module tb();
     #1;
   end
 
+  logic temp;
   // Wire up the inputs and outputs:
   reg clk;
   reg rst_n;
@@ -50,20 +52,22 @@ module tb();
       .rst_n  (rst_n)     // not reset
   );
   int fail_count = 0;
-
+  real start, end_time, test_time;
   initial begin // Stimulate device
     $display("TAP version 13");
     $display("1..2",); // 2 tests
-
-    
+    start = $realtime;
     ui_in = 8'b00100001; // ADDI 2
     #10; // Wait 5 clock cycles
-    `assert (uio_out[3:0], 7, fail_count, 1);
+    `assert (uio_out[3:0], 7, fail_count, 1, ($realtime - start) * 1e-3);
+    test_time = $realtime;
     ui_in = 8'b00110001; // ADDI 3
     #10;
-    `assert(uio_out[3:0], 7, fail_count, 2);
+    `assert(uio_out[3:0], 7, fail_count, 2, ($realtime - test_time) * 1e-3);
     ui_in = 8'b00000000;
 
+    end_time = $realtime;
+    $display("# Total time: %0.3f ms", (end_time - start) * 1e-3);
     // Print results
     if (fail_count > 0) begin
       $display("# %0d test(s) failed", fail_count);

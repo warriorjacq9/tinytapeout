@@ -1,5 +1,6 @@
 TAP version 13
 1..2 
-not ok 1 - FAILED in tb: uio_out[3:0] != 7
-ok 2 - uio_out[3:0] == 7
+not ok 1 - uio_out[3:0] !== 7 # time=0.010 ms
+ok 2 - uio_out[3:0] == 7 # time=0.010 ms
+# Total time: 0.020 ms
 # 1 test(s) failed
