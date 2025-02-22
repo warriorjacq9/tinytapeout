@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Sat Feb 22 18:27:49 2025
+[*] Sat Feb 22 19:23:33 2025
 [*]
 [dumpfile] "/home/jack/projs/silicon/test/tb.vcd"
-[dumpfile_mtime] "Sat Feb 22 18:26:21 2025"
-[dumpfile_size] 1751
+[dumpfile_mtime] "Sat Feb 22 19:22:57 2025"
+[dumpfile_size] 1826
 [savefile] "/home/jack/projs/silicon/test/config.gtkw"
 [timestart] 0
 [size] 1588 827
@@ -17,10 +17,10 @@
 [sst_vpaned_height] 232
 @28
 tb.dut.clk
-tb.dut.phase[2:0]
-@23
-tb.dut.bus_req[3:0]
+@29
+tb.dut.state[2:0]
 @22
+tb.dut.bus_req[3:0]
 tb.dut.a[3:0]
 tb.dut.b[3:0]
 tb.dut.c[4:0]

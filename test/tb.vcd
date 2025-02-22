@@ -1,5 +1,5 @@
 $date
-	Sat Feb 22 11:01:15 2025
+	Sat Feb 22 11:22:57 2025
 $end
 $version
 	Icarus Verilog
@@ -39,7 +39,7 @@ $var reg 4 8 bus_req [3:0] $end
 $var reg 5 9 c [4:0] $end
 $var reg 1 : done $end
 $var reg 4 ; mio_out [3:0] $end
-$var reg 3 < phase [2:0] $end
+$var reg 3 < state [2:0] $end
 $upscope $end
 $upscope $end
 $enddefinitions $end
@@ -61,7 +61,7 @@ b1 0
 x/
 b1 .
 b1000000 -
-b0zz0000 ,
+b0 ,
 b11 +
 bx *
 b10001 )
@@ -71,7 +71,7 @@ x&
 x%
 1$
 b1000000 #
-b0zz0000 "
+b0 "
 b11 !
 $end
 #1000
@@ -109,8 +109,8 @@ b110 9
 #8000
 b0 <
 1:
-b10zz0110 "
-b10zz0110 ,
+b10000110 "
+b10000110 ,
 b110 7
 1$
 #9000
@@ -121,8 +121,8 @@ b11 !
 b11 +
 b11 8
 b11 4
-b0zz0110 "
-b0zz0110 ,
+b110 "
+b110 ,
 0:
 b1 0
 1$
@@ -158,8 +158,8 @@ b111 9
 #18000
 b0 <
 1:
-b10zz0111 "
-b10zz0111 ,
+b10000111 "
+b10000111 ,
 b111 7
 1$
 #19000
