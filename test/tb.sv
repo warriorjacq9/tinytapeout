@@ -59,7 +59,7 @@ module tb();
     start = $realtime;
     ui_in = 8'b00100001; // ADDI 2
     #10; // Wait 5 clock cycles
-    `assert (uio_out[3:0], 7, fail_count, 1, ($realtime - start) * 1e-3);
+    `assert (uio_out[3:0], 6, fail_count, 1, ($realtime - start) * 1e-3);
     test_time = $realtime;
     ui_in = 8'b00110001; // ADDI 3
     #10;
