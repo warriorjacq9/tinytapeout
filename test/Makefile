@@ -4,6 +4,8 @@
 SRC_DIR = $(PWD)/../src
 PROJECT_SOURCES = project.v
 
+COMPILE_ARGS = -g2005-sv
+
 ifneq ($(GATES),yes)
 
 # RTL simulation:
@@ -27,20 +29,32 @@ VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
 
 endif
 
+SIM_LOG					= $(SIM_BUILD)/sim.log
+
 # Allow sharing configuration between design and testbench via `include`:
 COMPILE_ARGS 		+= -I$(SRC_DIR)
 
 # Include the testbench sources:
-VERILOG_SOURCES += $(PWD)/tb.v
+VERILOG_SOURCES += $(PWD)/tb.sv
 TOPLEVEL = tb
 
 # MODULE is the basename of the Python test file
 MODULE = test
 
-all: test
+all: run
+
+run: test
+	gtkwave tb.vcd config.gtkw
+
+clean:
+	rm -rf sim tb.vcd results.tap
 
 test:
 	mkdir -p $(SIM_BUILD) 
 	iverilog $(COMPILE_ARGS) -o $(SIM_BUILD)/sim.vvp -s $(TOPLEVEL) $(VERILOG_SOURCES)
-	vvp $(SIM_BUILD)/sim.vvp
-	gtkwave tb.vcd config.gtkw
+	vvp $(SIM_BUILD)/sim.vvp 2>&1 | tee $(SIM_LOG)
+	tail -n +2 $(SIM_LOG) > results.tap
+	@if grep -q "not ok" $(SIM_LOG); then \
+	    echo "Errors detected in Verilog simulation!"; \
+	    exit 1; \
+	fi

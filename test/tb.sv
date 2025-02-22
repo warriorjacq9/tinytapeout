@@ -1,10 +1,12 @@
 `default_nettype none
 `timescale 1ns / 1ps
 
-`define assert(signal, value) \
+`define assert(signal, value, fail_count, num) \
         if (signal !== value) begin \
-            $error("\n%c[1;91mTEST FAILED in %m: signal != value%c[0m",27,27); \
-            $finish; \
+          $display("not ok %0d - FAILED in %m: signal != value", num); \
+          fail_count++; \
+        end else begin \
+          $display("ok %0d - signal == value", num); \
         end
 
 module tb();
@@ -47,16 +49,27 @@ module tb();
       .clk    (clk),      // clock
       .rst_n  (rst_n)     // not reset
   );
+  int fail_count = 0;
 
   initial begin // Stimulate device
+    $display("TAP version 13");
+    $display("1..2",); // 2 tests
+
+    
     ui_in = 8'b00100001; // ADDI 2
     #10; // Wait 5 clock cycles
-    `assert (uio_out[3:0], 6);
+    `assert (uio_out[3:0], 7, fail_count, 1);
     ui_in = 8'b00110001; // ADDI 3
     #10;
-    `assert(uio_out[3:0], 7);
+    `assert(uio_out[3:0], 7, fail_count, 2);
     ui_in = 8'b00000000;
-    $display("%c[1;32mAll tests passed%c[0m", 27, 27);
+
+    // Print results
+    if (fail_count > 0) begin
+      $display("# %0d test(s) failed", fail_count);
+    end else begin
+      $display("# All tests passed!");
+    end
     $finish;
   end
   always @(uo_out[3:0]) begin // Listen for BUSREQ
