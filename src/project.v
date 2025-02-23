@@ -66,7 +66,7 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
   assign carry = c[4];
   reg [2:0] state; // FSM Finite State machine
   always @(negedge rst_n) begin
-    if(rst_n == 0) {a, b, c, bus_iomask, done, bus_out, bus_req, mio_out, state} = 0;
+    if(rst_n == 0) {a, b, c, bus_iomask, done, bus_out, bus_req, mio_out, state} <= 0;
   end
 
   always @(posedge clk) begin
