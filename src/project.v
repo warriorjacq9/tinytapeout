@@ -65,42 +65,43 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
   reg [4:0] c;
   assign carry = c[4];
   reg [2:0] state; // FSM Finite State machine
-  always @(negedge rst_n) begin
-    if(rst_n == 0) {a, b, c, bus_iomask, done, bus_out, bus_req, mio_out, state} <= 0;
-  end
 
-  always @(posedge clk) begin
-    case (opcode)
-      1: begin // ADDI
-        case (state)
-          0: begin
-            done <= 0;
-            a <= mio_in;
-            bus_req <= 4'b0011; // Request next operand (register number)
-            state <= 1;
-          end
-          1: begin
-            bus_iomask <= 4'b1111;
-            bus_req <= 4'b0001; // Receive register value
-            state <= 2;
-          end
-          2: begin
-            b <= bus_in;
-            bus_iomask <= 4'b0000;
-            state <= 3;
-          end
-          3: begin
-            c <= a + b;
-            state <= 4;
-          end
-          4: begin
-            if (oe_n == 0) bus_out <= c[3:0];
-            done <= 1;
-            state <= 0;
-          end
-        endcase
-      end
-    endcase
+  always @(posedge clk or negedge rst_n) begin
+    if (rst_n == 0) begin
+      {a, b, c, bus_iomask, done, bus_out, bus_req, mio_out, state} <= 0;
+    end else begin
+      case (opcode)
+        1: begin // ADDI
+          case (state)
+            0: begin
+              done <= 0;
+              a <= mio_in;
+              bus_req <= 4'b0011; // Request next operand (register number)
+              state <= 1;
+            end
+            1: begin
+              bus_iomask <= 4'b1111;
+              bus_req <= 4'b0001; // Receive register value
+              state <= 2;
+            end
+            2: begin
+              b <= bus_in;
+              bus_iomask <= 4'b0000;
+              state <= 3;
+            end
+            3: begin
+              c <= a + b;
+              state <= 4;
+            end
+            4: begin
+              if (oe_n == 0) bus_out <= c[3:0];
+              done <= 1;
+              state <= 0;
+            end
+          endcase
+        end
+      endcase
+    end
   end
 
 
