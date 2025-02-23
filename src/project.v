@@ -65,12 +65,15 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
   reg [4:0] c;
   assign carry = c[4];
   reg [2:0] state; // FSM Finite State machine
-  initial {a, b, c, bus_iomask, done, bus_out, bus_req, mio_out} = 0;
+  always @(negedge rst_n) begin
+    if(rst_n == 0) {a, b, c, bus_iomask, done, bus_out, bus_req, mio_out, state} = 0;
+  end
+
   always @(posedge clk) begin
     case (opcode)
       1: begin // ADDI
         case (state)
-          default: begin
+          0: begin
             done <= 0;
             a <= mio_in;
             bus_req <= 4'b0011; // Request next operand (register number)

@@ -1,6 +1,6 @@
 TAP version 13
 1..2 
-not ok 1 - uio_out[3:0] !== 7 # time=0.010 ms
-ok 2 - uio_out[3:0] == 7 # time=0.010 ms
-# Total time: 0.020 ms
-# 1 test(s) failed
+not ok 1 - uio_out[3:0] !== 6 # time=0.014 ms
+not ok 2 - uio_out[3:0] !== 7 # time=0.010 ms
+# Total time: 0.024 ms
+# 2 test(s) failed

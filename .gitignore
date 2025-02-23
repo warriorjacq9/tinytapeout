@@ -1,2 +1,4 @@
 runs/*
-test/sim/*/*
+test/sim/*
+tmp/*
+*.tap

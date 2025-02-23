@@ -57,6 +57,10 @@ module tb();
     $display("TAP version 13");
     $display("1..2",); // 2 tests
     start = $realtime;
+    #2;
+    rst_n = 0;
+    #2;
+    rst_n = 1;
     ui_in = 8'b00100001; // ADDI 2
     #10; // Wait 5 clock cycles
     `assert (uio_out[3:0], 6, fail_count, 1, ($realtime - start) * 1e-3);
@@ -74,7 +78,7 @@ module tb();
     end else begin
       $display("# All tests passed!");
     end
-    $finish;
+    $finish(0);
   end
   always @(uo_out[3:0]) begin // Listen for BUSREQ
     case(uo_out[3:0])
