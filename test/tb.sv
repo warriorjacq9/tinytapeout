@@ -65,11 +65,12 @@ module tb();
     #1;
     rst_n = 1;
     ui_in = 8'b00100001; // ADDI 2
-    #10; // Wait 5 clock cycles
+    @(posedge uio_out[7]); // Wait 5 clock cycles
     `assert (uio_out[3:0], 6, fail_count, 1, ($realtime - start) * 1e-3);
     test_time = $realtime;
     ui_in = 8'b00110001; // ADDI 3
-    #10;
+    #5;
+    @(posedge uio_out[7]);
     `assert(uio_out[3:0], 7, fail_count, 2, ($realtime - test_time) * 1e-3);
     ui_in = 8'b00000000;
 
@@ -92,12 +93,8 @@ module tb();
         uio_in = 4;   // and give that register value to the ALU)
       end
     endcase
-  end/*
-`ifdef GL_TEST
-  initial clk = 0;
-`else*/
+  end
   initial clk = 1;
-//`endif // Seems to trigger on the wrong edge in gate-level, everything else works fine though
   always #1 clk = ~clk;
 
 endmodule
