@@ -13,7 +13,11 @@
 module tb();
   // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
   initial begin
+`ifdef GL_TEST
     $dumpfile("tb.vcd");
+`else
+    $dumpfile("tb_rtl.vcd");
+`endif
     $dumpvars(0, tb);
     #1;
   end
@@ -57,9 +61,8 @@ module tb();
     $display("TAP version 13");
     $display("1..2",); // 2 tests
     start = $realtime;
-    #2;
     rst_n = 0;
-    #2;
+    #1;
     rst_n = 1;
     ui_in = 8'b00100001; // ADDI 2
     #10; // Wait 5 clock cycles
@@ -89,9 +92,12 @@ module tb();
         uio_in = 4;   // and give that register value to the ALU)
       end
     endcase
-  end
-
+  end/*
+`ifdef GL_TEST
+  initial clk = 0;
+`else*/
   initial clk = 1;
+//`endif // Seems to trigger on the wrong edge in gate-level, everything else works fine though
   always #1 clk = ~clk;
 
 endmodule

@@ -44,7 +44,11 @@ MODULE = test
 all: run
 
 run: test
+ifeq ($(GATES), yes)
 	gtkwave tb.vcd config.gtkw
+else
+	gtkwave tb_rtl.vcd rtl.gtkw
+endif
 
 clean:
 	rm -rf sim tb.vcd results.tap
