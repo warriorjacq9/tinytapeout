@@ -72,11 +72,11 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
     if (rst_n == 0) begin
       {a, b, c, bus_iomask, tog, bus_out, bus_req, mio_out, state} <= 0;
     end else begin
+    tog <= 0;
       case (opcode)
         1: begin // ADDI
           case (state)
             0: begin
-              tog <= 0;
               a <= mio_in;
               bus_req <= 4'b0011; // Request next operand (register number)
               state <= 1;
@@ -96,6 +96,38 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
               state <= 4;
             end
             4: begin
+              if (oe_n == 0) bus_out <= c[3:0];
+              tog <= 1;
+              state <= 0;
+            end
+          endcase
+        end
+        2: begin // ADD
+          case (state)
+            0: begin
+              bus_iomask <= 4'b1111;
+              bus_req <= 4'b0001; // Receive register 2 value
+              state <= 1;
+            end
+            1: begin
+              a <= bus_in;
+              bus_req <= 4'b0011; // Request next operand (register number)
+              state <= 2;
+            end
+            2: begin
+              bus_req <= 4'b0001; // Receive register 1 value
+              state <= 3;
+            end
+            3: begin
+              b <= bus_in;
+              bus_iomask <= 4'b0000;
+              state <= 4;
+            end
+            4: begin
+              c <= a + b;
+              state <= 5;
+            end
+            5: begin
               if (oe_n == 0) bus_out <= c[3:0];
               tog <= 1;
               state <= 0;

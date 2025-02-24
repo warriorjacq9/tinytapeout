@@ -58,21 +58,27 @@ module tb();
   real start, end_time, test_time;
   initial begin // Stimulate device
     $display("TAP version 13");
-    $display("1..2",); // 2 tests
+    $display("1..3",); // 3 tests
     start = $realtime;
     rst_n = 0;
     #1;
     rst_n = 1;
-    ui_in = 8'b00100001; // ADDI 2
-    @(posedge uio_out[7]); // Wait 5 clock cycles
+    // For testing purposes R1 is always 4. See always @(uo_out)
+    ui_in = 8'b00100001; // ADDI 2 R1
+    @(posedge uio_out[7]); // Wait for done signal
     `assert (uio_out[3:0], 6, fail_count, 1, ($realtime - start) * 1e-3);
     test_time = $realtime;
-    ui_in = 8'b00110001; // ADDI 3
+    ui_in = 8'b00110001; // ADDI 3 R1
     #5;
     @(posedge uio_out[7]);
     `assert(uio_out[3:0], 7, fail_count, 2, ($realtime - test_time) * 1e-3);
+    test_time = $realtime;
+    ui_in = 8'b00010010; // ADD R1 R1
+    #5;
+    @(posedge uio_out[7]);
+    `assert(uio_out[3:0], 8, fail_count, 3, ($realtime - test_time) * 1e-3);
     ui_in = 8'b00000000;
-
+    #5; // For viewing purposes
     end_time = $realtime;
     $display("# Total time: %0.3f ms", (end_time - start) * 1e-3);
     // Print results
@@ -89,7 +95,7 @@ module tb();
         ui_in[7:4] = 1; // Simulate next operand being register 1
       end
       4'b0001: begin  // Send a register value (On a real device, the register block will take the number in current memory location
-        uio_in = 4;   // and give that register value to the ALU)
+        uio_in = 4;   // and give that corresponding register value to the ALU)
       end
     endcase
   end

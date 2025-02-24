@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Sun Feb 23 23:02:20 2025
+[*] Mon Feb 24 15:55:15 2025
 [*]
 [dumpfile] "/home/jack/projs/silicon/test/tb_rtl.vcd"
-[dumpfile_mtime] "Sun Feb 23 22:57:53 2025"
-[dumpfile_size] 2198
+[dumpfile_mtime] "Mon Feb 24 15:55:02 2025"
+[dumpfile_size] 2505
 [savefile] "/home/jack/projs/silicon/test/rtl.gtkw"
 [timestart] 0
 [size] 1588 827
-[pos] -399 -44
-*-12.000000 2920 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -1
+*-12.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb.
 [sst_width] 214
 [signals_width] 126
