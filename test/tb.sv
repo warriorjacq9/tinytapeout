@@ -11,7 +11,6 @@
         end
 
 module tb();
-  // Dump the signals to a VCD file. You can view it with gtkwave or surfer.
   initial begin
 `ifdef GL_TEST
     $dumpfile("tb.vcd");
