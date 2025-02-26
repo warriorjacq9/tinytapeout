@@ -1,7 +1,9 @@
 TAP version 13
-1..3 
-ok 1 - uio_out[3:0] == 6 # time=0.010 ms
-ok 2 - uio_out[3:0] == 7 # time=0.010 ms
-ok 3 - uio_out[3:0] == 8 # time=0.012 ms
-# Total time: 0.037 ms
+1..5 
+ok 1 - 2 + 6 (uio_out[3:0]) == 8 # time=0.010 ms
+ok 2 - 3 + 6 (uio_out[3:0]) == 9 # time=0.010 ms
+ok 3 - 5 + 6 (uio_out[3:0]) == 11 # time=0.012 ms
+ok 4 - 6 - 2 (uio_out[3:0]) == 4 # time=0.010 ms
+ok 5 - 6 - 3 (uio_out[3:0]) == 3 # time=0.012 ms
+# Total time: 0.059 ms
 # All tests passed!

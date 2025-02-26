@@ -1,13 +1,13 @@
 `default_nettype none
 `timescale 1ns / 1ps
 
-`define assert(signal, value, fail_count, num, test_time) \
+`define assert(signal, value, num, msg) \
         if (signal !== value) begin \
           temp = signal; \
-          $display("not ok %0d - signal !== value # time=%0.3f ms", num, test_time); \
+          $display("not ok %0d - %s (signal) !== value # time=%0.3f ms", num, msg, 1e-3 * ($realtime - test_time)); \
           fail_count++; \
         end else begin \
-          $display("ok %0d - signal == value # time=%0.3f ms", num, test_time); \
+          $display("ok %0d - %s (signal) == value # time=%0.3f ms", num, msg, 1e-3 * ($realtime - test_time)); \
         end
 
 module tb();
@@ -58,26 +58,36 @@ module tb();
   real start, end_time, test_time;
   initial begin // Stimulate device
     $display("TAP version 13");
-    $display("1..3",); // 3 tests
+    $display("1..5",); // 5 tests
     start = $realtime;
+    uio_in[4] = 0;
     rst_n = 0;
     #1;
     rst_n = 1;
     // For testing purposes R1 is always 4. See always @(uo_out)
-    ui_in = 8'b00100001; // ADDI 2 R1
+    ui_in = 8'b00100001; // ADDI 2 R3
     @(posedge uio_out[7]); // Wait for done signal
-    `assert (uio_out[3:0], 6, fail_count, 1, ($realtime - start) * 1e-3);
+    `assert (uio_out[3:0], 8, 1, "2 + 6");
     test_time = $realtime;
-    ui_in = 8'b00110001; // ADDI 3 R1
+    ui_in = 8'b00110001; // ADDI 3 R3
     #5;
     @(posedge uio_out[7]);
-    `assert(uio_out[3:0], 7, fail_count, 2, ($realtime - test_time) * 1e-3);
+    `assert(uio_out[3:0], 9, 2, "3 + 6");
     test_time = $realtime;
-    ui_in = 8'b00010010; // ADD R1 R1
+    ui_in = 8'b00100010; // ADD R2 R3
     #5;
     @(posedge uio_out[7]);
-    `assert(uio_out[3:0], 8, fail_count, 3, ($realtime - test_time) * 1e-3);
-    ui_in = 8'b00000000;
+    `assert(uio_out[3:0], 11, 3, "5 + 6");
+    test_time = $realtime;
+    ui_in = 8'b00100011; // SUBI 2 R3
+    #5;
+    @(posedge uio_out[7]);
+    `assert(uio_out[3:0], 4, 4, "6 - 2");
+    test_time = $realtime;
+    ui_in = 8'b01000100; // SUB R4 R3
+    #5;
+    @(posedge uio_out[7]);
+    `assert(uio_out[3:0], 3, 5, "6 - 3");
     #5; // For viewing purposes
     end_time = $realtime;
     $display("# Total time: %0.3f ms", (end_time - start) * 1e-3);
@@ -92,10 +102,15 @@ module tb();
   always @(uo_out[3:0]) begin // Listen for BUSREQ
     case(uo_out[3:0])
       4'b0011: begin // Next operand (Arbitrary for now, device can have up to 16 registers)
-        ui_in[7:4] = 1; // Simulate next operand being register 1
+        ui_in[7:4] = 3; // Simulate next operand being register 3
       end
-      4'b0001: begin  // Send a register value (On a real device, the register block will take the number in current memory location
-        uio_in = 4;   // and give that corresponding register value to the ALU)
+      4'b0001: begin  // Send a register value
+        case (ui_in[7:4]) // Emulating 4 registers
+          1: uio_in[3:0] = 4;
+          2: uio_in[3:0] = 5;
+          3: uio_in[3:0] = 6;
+          4: uio_in[3:0] = 3;
+        endcase   
       end
     endcase
   end

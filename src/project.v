@@ -5,6 +5,69 @@
 
 `default_nettype none
 
+// Helper macros
+// For fetching immediate and register
+`define imm_reg(operation) \
+  case (state) \
+    0: begin \
+      a <= mio_in; \
+      bus_req <= 4'b0011; \ // Request next operand (register number)
+      state <= 1; \
+    end \
+    1: begin \
+      bus_iomask <= 4'b1111; \
+      bus_req <= 4'b0001; \ // Receive register value
+      state <= 2; \
+    end \
+    2: begin \
+      b <= bus_in; \
+      bus_iomask <= 4'b0000; \
+      state <= 3; \
+    end \
+    3: begin \
+      c <= operation; \
+      state <= 4; \
+    end \
+    4: begin \
+      if (oe_n == 0) bus_out <= c[3:0]; \
+      tog <= 1;\
+      state <= 0; \
+      bus_req <= 0; \
+    end \
+  endcase
+
+`define reg_reg(operation) \
+  case (state) \
+    0: begin \
+      bus_iomask <= 4'b0000; \
+      bus_req <= 4'b0001; \ // Receive register 2 value
+      state <= 1; \
+    end \
+    1: begin \
+      a <= bus_in; \
+      bus_req <= 4'b0011; \ // Request next operand (register number)
+      state <= 2; \
+    end \
+    2: begin \
+      bus_req <= 4'b0001; \ // Receive register 1 value
+      state <= 3; \
+    end \
+    3: begin \
+      b <= bus_in; \
+      bus_iomask <= 4'b0000; \
+      state <= 4; \
+    end \
+    4: begin \
+      c <= operation; \
+      state <= 5; \
+    end \
+    5: begin \
+      if (oe_n == 0) bus_out <= c[3:0]; \
+      tog <= 1; \
+      state <= 0; \
+      bus_req <= 0; \
+    end \
+  endcase
 
 module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
     input  wire [7:0] ui_in,    // Dedicated inputs
@@ -75,64 +138,22 @@ module tt_um_warriorjacq9 ( /* verilator lint_off DECLFILENAME */
     tog <= 0;
       case (opcode)
         1: begin // ADDI
-          case (state)
-            0: begin
-              a <= mio_in;
-              bus_req <= 4'b0011; // Request next operand (register number)
-              state <= 1;
-            end
-            1: begin
-              bus_iomask <= 4'b1111;
-              bus_req <= 4'b0001; // Receive register value
-              state <= 2;
-            end
-            2: begin
-              b <= bus_in;
-              bus_iomask <= 4'b0000;
-              state <= 3;
-            end
-            3: begin
-              c <= a + b;
-              state <= 4;
-            end
-            4: begin
-              if (oe_n == 0) bus_out <= c[3:0];
-              tog <= 1;
-              state <= 0;
-            end
-          endcase
+          `imm_reg(a + b);
         end
         2: begin // ADD
-          case (state)
-            0: begin
-              bus_iomask <= 4'b1111;
-              bus_req <= 4'b0001; // Receive register 2 value
-              state <= 1;
-            end
-            1: begin
-              a <= bus_in;
-              bus_req <= 4'b0011; // Request next operand (register number)
-              state <= 2;
-            end
-            2: begin
-              bus_req <= 4'b0001; // Receive register 1 value
-              state <= 3;
-            end
-            3: begin
-              b <= bus_in;
-              bus_iomask <= 4'b0000;
-              state <= 4;
-            end
-            4: begin
-              c <= a + b;
-              state <= 5;
-            end
-            5: begin
-              if (oe_n == 0) bus_out <= c[3:0];
-              tog <= 1;
-              state <= 0;
-            end
-          endcase
+          `reg_reg(a + b);
+        end
+        3: begin // SUBI
+          `imm_reg(b - a);
+        end
+        4: begin // SUB
+          `reg_reg(b - a);
+        end
+        5: begin // NAND
+          `reg_reg(a ~& b);
+        end
+        6: begin // SHR
+          `imm_reg(b >> a);
         end
       endcase
     end
