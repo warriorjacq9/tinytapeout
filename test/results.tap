@@ -1,9 +1,18 @@
 TAP version 13
-1..5 
-ok 1 - 2 + 6 (uio_out[3:0]) == 8 # time=0.010 ms
-ok 2 - 3 + 6 (uio_out[3:0]) == 9 # time=0.010 ms
-ok 3 - 5 + 6 (uio_out[3:0]) == 11 # time=0.012 ms
-ok 4 - 6 - 2 (uio_out[3:0]) == 4 # time=0.010 ms
-ok 5 - 6 - 3 (uio_out[3:0]) == 3 # time=0.012 ms
-# Total time: 0.059 ms
+1..14 
+ok 1 - Cycle 1: 2 + 6 (uio_out[3:0]) == 8 # time=0.010 ms
+ok 2 - Cycle 2: 10 + 6 (uio_out[6]) == 1 # time=0.010 ms
+ok 3 - Cycle 2: 10 + 6 (uio_out[3:0]) == 0 # time=0.010 ms
+ok 4 - Cycle 3: 15 + 6 (uio_out[6]) == 1 # time=0.010 ms
+ok 5 - Cycle 3: 15 + 6 (uio_out[3:0]) == 5 # time=0.010 ms
+ok 6 - Cycle 4: 5 + 6 (uio_out[3:0]) == 11 # time=0.012 ms
+ok 7 - Cycle 5: 3 + 6 (uio_out[3:0]) == 9 # time=0.012 ms
+ok 8 - Cycle 6: 6 - 2 (uio_out[3:0]) == 4 # time=0.010 ms
+ok 9 - Cycle 7: 6 - 7 (uio_out[6]) == 1 # time=0.010 ms
+ok 10 - Cycle 7: 6 - 7 (uio_out[3:0]) == 4'b1111 # time=0.010 ms
+ok 11 - Cycle 8: 6 - 3 (uio_out[3:0]) == 3 # time=0.012 ms
+ok 12 - Cycle 9: 4'b0100 ~& 4'b0110 (uio_out[3:0]) == 4'b1011 # time=0.012 ms
+ok 13 - Cycle 10: 4'b0110 >> 1 (uio_out[3:0]) == 4'b0011 # time=0.010 ms
+ok 14 - Cycle 11: 4'b0110 >> 2 (uio_out[3:0]) == 4'b0001 # time=0.010 ms
+# time=0.123 ms
 # All tests passed!

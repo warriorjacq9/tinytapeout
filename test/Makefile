@@ -41,7 +41,7 @@ TOPLEVEL = tb
 # MODULE is the basename of the Python test file
 MODULE = test
 
-all: run
+all: test
 
 run: test
 ifeq ($(GATES), yes)
@@ -56,8 +56,9 @@ clean:
 test:
 	mkdir -p $(SIM_BUILD) 
 	iverilog $(COMPILE_ARGS) -o $(SIM_BUILD)/sim.vvp -s $(TOPLEVEL) $(VERILOG_SOURCES)
-	vvp $(SIM_BUILD)/sim.vvp 2>&1 | tee $(SIM_LOG)
+	vvp $(SIM_BUILD)/sim.vvp > $(SIM_LOG)
 	tail -n +2 $(SIM_LOG) > results.tap
+	tappy results.tap
 	@if grep -q "not ok" $(SIM_LOG); then \
 	    echo "Errors detected in Verilog simulation!"; \
 	    exit 1; \
