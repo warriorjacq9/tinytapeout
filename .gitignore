@@ -3,4 +3,3 @@ test/sim/*
 tmp/*
 *.tap
 *.vcd
-test/results.tap
