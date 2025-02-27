@@ -59,13 +59,20 @@ module tb();
   real start, end_time, test_time;
   initial begin // Stimulate device
     $display("TAP version 13");
-    $display("1..14",);
+    $display("1..16",);
     start = $realtime;
+    
+    // Reset/initialization sequence
     uio_in[4] = 0;
     rst_n = 0;
     #1;
     rst_n = 1;
     // For testing purposes R3 is always 6. See always @(uo_out)
+
+    /*****************************************
+                  OPERAND TESTING
+      *****************************************/
+    
     ui_in = 8'b00100001; // ADDI 2 R3
     @(posedge uio_out[7]); // Wait for done signal
     `assert (uio_out[3:0], 8, 1, "Cycle 1: 2 + 6");
@@ -123,6 +130,23 @@ module tb();
     @(posedge uio_out[7]);
     `assert(uio_out[3:0], 4'b0001, 14, "Cycle 11: 4'b0110 >> 2");
     ui_in = 8'b00000000;
+
+    /*****************************************
+                    MISC TESTING
+      *****************************************/
+    
+    // Testing OE signal
+    uio_in[4] = 1; // OE Off
+    ui_in = 8'b00100001; // ADDI 2 R3
+    #5;
+    @(posedge uio_out[7]);
+    `assert(uio_out[3:0], 4'bxxxx, 15, "Cycle 12: OE test");
+    uio_in[4] = 0; // OE On
+    ui_in = 8'b00100001; // ADDI 2 R3
+    #5;
+    @(posedge uio_out[7]);
+    `assert(uio_out[3:0], 8, 16, "Cycle 13: OE test (6 + 2)");
+
     #5; // For viewing purposes
     end_time = $realtime;
     $display("# time=%0.3f ms", (end_time - start) * 1e-3);

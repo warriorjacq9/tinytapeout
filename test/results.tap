@@ -1,5 +1,5 @@
 TAP version 13
-1..14 
+1..16 
 ok 1 - Cycle 1: 2 + 6 (uio_out[3:0]) == 8 # time=0.010 ms
 ok 2 - Cycle 2: 10 + 6 (uio_out[6]) == 1 # time=0.010 ms
 ok 3 - Cycle 2: 10 + 6 (uio_out[3:0]) == 0 # time=0.010 ms
@@ -14,5 +14,7 @@ ok 11 - Cycle 8: 6 - 3 (uio_out[3:0]) == 3 # time=0.012 ms
 ok 12 - Cycle 9: 4'b0100 ~& 4'b0110 (uio_out[3:0]) == 4'b1011 # time=0.012 ms
 ok 13 - Cycle 10: 4'b0110 >> 1 (uio_out[3:0]) == 4'b0011 # time=0.010 ms
 ok 14 - Cycle 11: 4'b0110 >> 2 (uio_out[3:0]) == 4'b0001 # time=0.010 ms
-# time=0.123 ms
+ok 15 - Cycle 12: OE test (uio_out[3:0]) == 4'bxxxx # time=0.020 ms
+ok 16 - Cycle 13: OE test (6 + 2) (uio_out[3:0]) == 8 # time=0.030 ms
+# time=0.143 ms
 # All tests passed!

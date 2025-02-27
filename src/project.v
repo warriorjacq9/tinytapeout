@@ -29,7 +29,10 @@
       state <= 4; \
     end \
     4: begin \
-      if (oe_n == 0) bus_out <= c[3:0]; \
+      if (oe_n == 0) bus_out <= c[3:0]; else begin \
+        bus_out <= 4'bxxxx; \
+        bus_iomask <= 4'b1111; \
+      end \
       tog <= 1;\
       state <= 0; \
       bus_req <= 0; \
