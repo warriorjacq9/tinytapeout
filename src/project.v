@@ -11,12 +11,12 @@
   case (state) \
     0: begin \
       a <= mio_in; \
-      bus_req <= 4'b0011; \ // Request next operand (register number)
+      bus_req <= 4'b0011; \
       state <= 1; \
     end \
     1: begin \
       bus_iomask <= 4'b1111; \
-      bus_req <= 4'b0001; \ // Receive register value
+      bus_req <= 4'b0001; \
       state <= 2; \
     end \
     2: begin \
@@ -43,16 +43,16 @@
   case (state) \
     0: begin \
       bus_iomask <= 4'b0000; \
-      bus_req <= 4'b0001; \ // Receive register 2 value
+      bus_req <= 4'b0001; \
       state <= 1; \
     end \
     1: begin \
       a <= bus_in; \
-      bus_req <= 4'b0011; \ // Request next operand (register number)
+      bus_req <= 4'b0011; \
       state <= 2; \
     end \
     2: begin \
-      bus_req <= 4'b0001; \ // Receive register 1 value
+      bus_req <= 4'b0001; \
       state <= 3; \
     end \
     3: begin \
