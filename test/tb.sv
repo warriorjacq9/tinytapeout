@@ -5,7 +5,7 @@
         if (signal !== value) begin \
           temp = signal; \
           $display("not ok %0d - %s (signal) !== value # time=%0.3f ms", num, msg, 1e-3 * ($realtime - test_time)); \
-          $display("\t---\n\t\tgot: %d\n\t\texpected: value\n\t...", signal); \
+          $display("  ---\n  severity: fail\n  data:\n    got: %d\n    expected: value\n  ...", signal); \
           fail_count++; \
         end else begin \
           $display("ok %0d - %s (signal) == value # time=%0.3f ms", num, msg, 1e-3 * ($realtime - test_time)); \

@@ -56,9 +56,8 @@ clean:
 test:
 	mkdir -p $(SIM_BUILD) 
 	iverilog $(COMPILE_ARGS) -o $(SIM_BUILD)/sim.vvp -s $(TOPLEVEL) $(VERILOG_SOURCES)
-	vvp $(SIM_BUILD)/sim.vvp > $(SIM_LOG)
+	vvp $(SIM_BUILD)/sim.vvp | tee $(SIM_LOG) | ./tapview
 	tail -n +2 $(SIM_LOG) > results.tap
-	tappy results.tap
 	@if grep -q "not ok" $(SIM_LOG); then \
 	    echo "Errors detected in Verilog simulation!"; \
 	    exit 1; \
